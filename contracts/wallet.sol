@@ -36,21 +36,30 @@ contract MyWallet is mortal {
     }
     
     
-    mapping(uint256 => imgValue) imgCtr_author;
-    mapping(address => photographers) imgCtr;
-    
-    
-    function MyWallet(){
+    mapping(uint256 => imgValue) imgCtr;
+    mapping(address => photographers) imgCtr_author;
+    mapping(string => address) author_photo;
+    event receivedFunds(address indexed _from,uint256 indexed _amount);
+    event imgUploaded(address indexed _from,uint256 indexed _price, string indexed _hash);
+    uint256 img_ctr;
+    function MyWallet() public{
         creator=msg.sender;
     }
-    function imgUpload(address _from, uint256 _val, string _hash) public{
-       
+    function imgUpload(address _from, uint256 _price, string _hash) public returns(uint256){
+       img_ctr+=1;
+       imgCtr[img_ctr]=imgValue(_from,_price,_hash);
+       author_photo[_hash]=_from;
+       emit imgUploaded(_from,_price,_hash);
+       return img_ctr;
     }
     
-    function buyImage(string _hash, address _from) public{
+    function buyImage(string _hash) public returns(address,uint256){
+        address author_add=author_photo[_hash];
+        return (author_add,);
         
     }
-    function sendMoneyToAuthors(address _to, uint256 sales){
+    function sendMoneyToAuthors(address _to, uint256 sales)public {
+        
         
     } 
     
